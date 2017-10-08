@@ -1,0 +1,4 @@
+1. Scrape a list of partner unis to get their base url
+2. Feed a spider the base url and make it crawl everywhere
+3. Retrieve the pages that match what a course outline would look like
+    (although different case for those with just link to pdf)
