@@ -27,8 +27,8 @@ classifier = classifier()
 db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="scrape")
 cursor = db.cursor()
 
-cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
-# cursor.execute("""SELECT * FROM course_scrape WHERE university = 'University of New South Wales' LIMIT 2""")
+# cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
+cursor.execute("""SELECT * FROM course_scrape WHERE university = 'University of New South Wales' LIMIT 2""")
 
 outlines = cursor.fetchall()
 # for every course outline
@@ -63,7 +63,7 @@ for university, url, text, course_code, course_title, course_id, keywords in out
             r.extract_keywords_from_text(token)
             ranked_phrases = r.get_ranked_phrases()
             for phrase in ranked_phrases:
-                if len(phrase) < 3:
+                if len(phrase) < 4:
                     ranked_phrases.remove(phrase)
             outcome_keywords.extend(list(set(ranked_phrases)))
 

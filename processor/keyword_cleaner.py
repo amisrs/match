@@ -18,15 +18,16 @@ class keyword_cleaner:
             reg = re.compile('\w ')
             if reg.search(word) != None:
                 # we don't want to mess with phrases
-
-                self.cleaned_list.append(word)
+                if word not in self.cleaned_list and "student" not in word and "staff" not in word and "outcome" not in word and "course" not in word and "lecture" not in word and "class" not in word and "tutorial" not in word and "http://" not in word and "mark" not in word:
+                    self.cleaned_list.append(word)
                 continue
 
             # now it's only single words
             word_pos = nltk.pos_tag([word])
             print word + ' is a ' + word_pos[0][1]
             if word_pos[0][1] in self.good_pos:
-                self.cleaned_list.append(word)
+                if word not in self.cleaned_list and "student" not in word and "staff" not in word and "outcome" not in word and "course" not in word and "lecture" not in word and "class" not in word and "tutorial" not in word and "http://" not in word and "mark" not in word:
+                    self.cleaned_list.append(word)
         return self.cleaned_list
 
     def break_phrases(self, list_to_break):
@@ -38,7 +39,7 @@ class keyword_cleaner:
         print self.broken_list
         return self.broken_list
 
-    def compare_keywords(self, list1, list2):
+    def compare_keywords(self, list1, list2, sim_type="path"):
         similarity_list = []
 
         for list1_word in list1:
@@ -59,8 +60,20 @@ class keyword_cleaner:
                 for synset1 in synsetlist1:
                     synset1sum = 0
                     for synset2 in synsetlist2:
-                        print "similarity of: " + str(synset1) + " vs " + str(synset2)
-                        sim = synset1.path_similarity(synset2)
+                        # print "similarity of: " + str(synset1) + " vs " + str(synset2)
+                        if sim_type == "path":
+                            sim = synset1.path_similarity(synset2)
+                        elif sim_type == "lch":
+                            sim = synset1.lch_similarity(synset2)
+                        elif sim_type == "wup":
+                            sim = synset1.wup_similarity(synset2)
+                        # elif sim_type == "res":
+                        #     sim = synset1.res_similarity(synset2)
+                        # elif sim_type == "jcn":
+                        #     sim = synset1.jcn_similarity(synset2)
+                        # elif sim_type == "lin":
+                        #     sim = synset1.lin_similarity(synset2)
+                        #
                         if sim != None:
                             synset1sum += sim
                     synset1avg = synset1sum / len(synsetlist2)
