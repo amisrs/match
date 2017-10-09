@@ -32,7 +32,7 @@ cursor.execute("""SELECT * FROM course_scrape WHERE university = 'University of 
 
 outlines = cursor.fetchall()
 # for every course outline
-for university, url, text, course_code, course_title, course_id, keywords in outlines:
+for university, url, text, course_code, course_title, course_id, keywords, emails in outlines:
     # take the 'text' field as input
 
     outcome_keywords = []
