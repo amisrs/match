@@ -28,11 +28,11 @@ db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="sc
 cursor = db.cursor()
 
 # cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
-cursor.execute("""SELECT * FROM course_scrape WHERE university = 'University of New South Wales' LIMIT 2""")
+cursor.execute("""SELECT * FROM course_scrape WHERE university = 'University of New South Wales'""")
 
 outlines = cursor.fetchall()
 # for every course outline
-for university, url, text, course_code, course_title, course_id, keywords in outlines:
+for university, url, text, course_code, course_title, course_id, keywords, emails in outlines:
     # take the 'text' field as input
 
     outcome_keywords = []
@@ -46,7 +46,6 @@ for university, url, text, course_code, course_title, course_id, keywords in out
     text = text.replace('\n', ' ')
 
     cleaned_text = BeautifulSoup(text, "lxml").text
-    print cleaned_text
     token_list = tokenizer.tokenize(cleaned_text)
 
     print "\n========================= Tokens: "+str(len(token_list))+ " ========================="

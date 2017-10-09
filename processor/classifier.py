@@ -79,7 +79,7 @@ class classifier:
         # load w2v word embeddings
 
         print "Loading w2v word embeddings..."
-        with open("/media/sf_share/glove.6B/glove.6B.50d.txt", "rb") as lines:
+        with open("glove.6B.50d.txt", "rb") as lines:
             w2v = {line.split()[0]: np.array(map(float, line.split()[1:])) for line in lines}
         print "w2v loaded."
         train_length = 0
