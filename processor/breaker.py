@@ -18,7 +18,7 @@ with open('mysqlp.txt', 'r') as mysqlp_file:
     mysqlp = mysqlp_file.read().split('\n')[0]
 
 punkt_param = PunktParameters()
-abbreviation = ['e.g', 'i.e', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+abbreviation = ['Max', 'Min', 'max', 'min', 'e.g', 'i.e', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
 punkt_param.abbrev_types = set(abbreviation)
 
 tokenizer = PunktSentenceTokenizer(punkt_param)
@@ -28,11 +28,11 @@ db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="sc
 cursor = db.cursor()
 
 # cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
-cursor.execute("""SELECT * FROM course_scrape WHERE university = 'University of New South Wales' LIMIT 2""")
+cursor.execute("""SELECT * FROM course_scrape WHERE id = 5499""")
 
 outlines = cursor.fetchall()
 # for every course outline
-for university, url, text, course_code, course_title, course_id, keywords in outlines:
+for university, url, text, course_code, course_title, course_id, keywords, emails in outlines:
     # take the 'text' field as input
 
     outcome_keywords = []
@@ -52,14 +52,18 @@ for university, url, text, course_code, course_title, course_id, keywords in out
     print "\n========================= Tokens: "+str(len(token_list))+ " ========================="
     for token in token_list:
         # print token
-        probs = classifier.classify_sentence(token)
+        token = token.replace("\"", "")
+        classifier_result = classifier.classify_sentence(token)
+        probs = classifier_result[0]
+        classified = classifier_result[1]
+
         prob_dict = {}
         for cat, prob in probs:
             prob_dict[cat] = prob
 
         guessed_category = max(prob_dict, key=prob_dict.get)
 
-        if (guessed_category == 'course_outcomes' and prob_dict['course_outcomes'] >= 0) or (guessed_category == 'course_content' and prob_dict['course_content'] >= 0):
+        if (guessed_category == 'course_outcomes' and abs(prob_dict['course_outcomes']) <= 0.5) or (guessed_category == 'course_content' and abs(prob_dict['course_content']) <= 0.5):
             r.extract_keywords_from_text(token)
             ranked_phrases = r.get_ranked_phrases()
             for phrase in ranked_phrases:
@@ -70,24 +74,58 @@ for university, url, text, course_code, course_title, course_id, keywords in out
 
 
         insert_cursor = db.cursor()
-        insert_query = ("""
-            INSERT INTO sentence (
-                text,
-                course,
-                assessments,
-                contact_hours,
-                course_content,
-                course_outcomes,
-                textbooks
-            ) VALUES (\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\")
-            ON DUPLICATE KEY UPDATE
-                `assessments` = {2}, `contact_hours` = {3}, `course_content` = {4}, `course_outcomes` = {5}, `textbooks` = {6}
-            """.format(token.replace("\"", "").encode('utf-8', 'ignore'), course_id, prob_dict['assessments'], prob_dict['contact_hours'], prob_dict['course_content'], prob_dict['course_outcomes'], prob_dict['textbooks'])
-        )
+
+        get_existing = ("""
+            SELECT id FROM sentence WHERE text = \"{0}\" and course = {1}
+            """.format(token.replace("\"", "").encode('utf-8', 'ignore'), course_id))
+        insert_cursor.execute(get_existing)
+        existing_id = insert_cursor.fetchone()
+        if existing_id is not None:
+            for id_value in existing_id:
+                    insert_query = ("""
+                        UPDATE sentence SET
+                            assessments = {0},
+                            contact_hours = {1},
+                            course_content = {2},
+                            course_outcomes = {3},
+                            textbooks = {4},
+                            class = \"{5}\"
+                        WHERE id = {6}
+                        """.format(prob_dict['assessments'],
+                                   prob_dict['contact_hours'],
+                                   prob_dict['course_content'],
+                                   prob_dict['course_outcomes'],
+                                   prob_dict['textbooks'],
+                                   classified,
+                                   id_value)
+                    )
+        else:
+            insert_query = ("""
+                INSERT INTO sentence (
+                    text,
+                    course,
+                    assessments,
+                    contact_hours,
+                    course_content,
+                    course_outcomes,
+                    textbooks,
+                    class
+                ) VALUES (\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\")
+                """.format(token.replace("\"", "").encode('utf-8', 'ignore'),
+                           course_id,
+                           prob_dict['assessments'],
+                           prob_dict['contact_hours'],
+                           prob_dict['course_content'],
+                           prob_dict['course_outcomes'],
+                           prob_dict['textbooks'],
+                           classified)
+            )
+
         print '\n'
         print insert_query
         insert_cursor.execute(insert_query)
         insert_cursor.close()
+
 
     keyword_string = ""
     outcome_keywords = kc.clean_keywords(outcome_keywords)

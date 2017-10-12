@@ -1,33 +1,142 @@
 import nltk
 import re
-
+import os
 from nltk.corpus import wordnet
 from nltk.tokenize import word_tokenize
+from nltk.tag.stanford import StanfordPOSTagger
+
+#https://stackoverflow.com/questions/30821188/python-nltk-pos-tag-not-returning-the-correct-part-of-speech-tag
+home = os.getcwd()
+_path_to_model = home + '/stanford-postagger/models/english-bidirectional-distsim.tagger'
+_path_to_jar = home + '/stanford-postagger/stanford-postagger.jar'
+
+
 
 class keyword_cleaner:
     # we don't want to have stupid keywords, like adverbs or adjectives
     # actually we only want nouns?
+
+
     good_pos = ['NN', 'NNS', 'NNP', 'NNPS']
     cleaned_list = []
     broken_list = []
 
     def clean_keywords(self, keywords):
         print 'Cleaning keyword list: '
-        print keywords
+        blacklist = [
+            "student",
+            "staff",
+            "outcome",
+            "course",
+            "lecture",
+            "class",
+            "tutorial",
+            "http",
+            "teaching",
+            "exam",
+            "study",
+            "email",
+            "time",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "feedback",
+            "quiz",
+            "week",
+            "grades",
+            "submission",
+            "announcement",
+            "school",
+            "myexperience",
+            "learning",
+            "understand",
+            "assessment",
+            "question",
+            "bachelor",
+            "undergraduate",
+            "postgraduate",
+            "consultation",
+            "please",
+            "session",
+            "semester",
+            "teacher",
+            "download",
+            "appointment",
+            "available",
+            "contact",
+            "office",
+            "phone",
+            "may ",
+            "website",
+            "privacy",
+            "library",
+            "tutor",
+            "access",
+            "cohort",
+            "portal",
+            "enrol",
+            "preference",
+            "location",
+            "login",
+            "moodle",
+            "consult",
+            "enquiries"
+            "content",
+            "purpose",
+            "conclude",
+            "marks",
+            "university",
+            "provide",
+            "asterisk",
+            "paper",
+        ]
+        passed_blacklist = []
         for word in keywords:
             reg = re.compile('\w ')
             if reg.search(word) != None:
                 # we don't want to mess with phrases
-                if word not in self.cleaned_list and "student" not in word and "staff" not in word and "outcome" not in word and "course" not in word and "lecture" not in word and "class" not in word and "tutorial" not in word and "http://" not in word and "mark" not in word:
-                    self.cleaned_list.append(word)
+                if word not in self.cleaned_list:
+                    is_black = False
+                    for blackword in blacklist:
+                        if blackword in word:
+                            is_black = True
+                            break
+                    if not is_black and word not in passed_blacklist and len(word) > 5:
+                        passed_blacklist.append(word)
                 continue
 
             # now it's only single words
+            # st = StanfordPOSTagger(_path_to_model, _path_to_jar)
+            # word_pos = st.tag([word])
             word_pos = nltk.pos_tag([word])
-            print word + ' is a ' + word_pos[0][1]
+            print word.encode('utf-8', 'ignore') + ' is a ' + word_pos[0][1]
             if word_pos[0][1] in self.good_pos:
-                if word not in self.cleaned_list and "student" not in word and "staff" not in word and "outcome" not in word and "course" not in word and "lecture" not in word and "class" not in word and "tutorial" not in word and "http://" not in word and "mark" not in word:
-                    self.cleaned_list.append(word)
+                if word not in self.cleaned_list:
+                    is_black = False
+                    for blackword in blacklist:
+                        if blackword in word:
+                            is_black = True
+                            break
+
+                    if not is_black and word not in passed_blacklist and len(word) > 5:
+                        passed_blacklist.append(word)
+
+        # st = StanfordPOSTagger(_path_to_model, _path_to_jar)
+        # pos_list = st.tag_sents([passed_blacklist])
+        #
+        # for word, pos in pos_list[0]:
+        #     if pos in self.good_pos:
+        #         self.cleaned_list.append(word)
+        self.cleaned_list = passed_blacklist
+
+        print self.cleaned_list
         return self.cleaned_list
 
     def break_phrases(self, list_to_break):
