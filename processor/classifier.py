@@ -4,7 +4,7 @@ from sklearn.datasets import load_files
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
 
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import SGDClassifier, LogisticRegression
 from sklearn.svm import SVC, LinearSVC
 
 from mlxtend.plotting import plot_decision_regions
@@ -63,14 +63,16 @@ class classifier:
         predicted = self.text_clf.predict(docs_new)
         # print self.outline_train.target_names
         # print self.text_clf.predict_proba(docs_new)
-        probs = zip(self.outline_train.target_names, self.text_clf.predict_proba(docs_new)[0])
+        probs = zip(self.outline_train.target_names, self.text_clf.decision_function(docs_new)[0])
         for prob in probs:
             print prob
 
+        classification = ""
         for doc, category in zip(docs_new, predicted):
-            print "%r => %s" % (doc, self.outline_train.target_names[category])
+            classification = self.outline_train.target_names[category]
+            print "%r => %s" % (doc, classification)
 
-        return probs
+        return (probs, classification)
 
 
 
@@ -131,8 +133,9 @@ class classifier:
                             #  ('clf', SGDClassifier(loss='hinge', penalty='l2',
                             #                        alpha=1e-3, random_state=42,
                             #                        max_iter=5, tol=None)),
-                            ('clf', SVC(kernel='linear', probability=True)),
-                            # ('clf', LinearSVC()),
+                            # ('clf', SVC(kernel='linear', probability=True)),
+                            ('clf', LinearSVC(tol=0.1)),
+                            # ('clf', LogisticRegression(tol=0.1)),
 
         ])
 
