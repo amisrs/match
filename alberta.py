@@ -17,6 +17,7 @@ urls = [
 ]
 
 filename_url_map = {}
+filename_info_map = {}
 
 for url in urls:
     response = requests.get(url)
@@ -44,9 +45,26 @@ for url in urls:
 
         page_soup = BeautifulSoup(response.content, "html.parser")
 
+
         more_buttons = page_soup.find_all("a", class_="pure-button pure-button-primary claptrap-more-button")
 
         for more_button in more_buttons:
+            parent = more_button.parent
+            print type(parent)
+            spans = parent.find_all("span")
+            course_title = ""
+            course_number = ""
+            for span in spans:
+                print '\n'
+                print span
+                print span.get('class')
+                if span.get('class')[0] == "claptrap-course-title":
+                    course_title = span.text
+                    print "Found course title: " + course_title
+                elif span.get('class')[0] == "claptrap-course-number":
+                    course_number = span.text
+                    print "Found course number: " + course_number
+
             more_link = more_button.get("href").replace("Details", "PastSyllabi")
             print "    Then pulling " + more_link
 
@@ -57,13 +75,14 @@ for url in urls:
             div_container = syllabus_soup.find("div", class_="content-container container")
 
 
-            p = div_container.find("p")
-            print p
             try:
+                p = div_container.find("p")
+
                 syllabus_list.append(p.find("a").get("href"))
                 pdf = requests.get(base_url+p.find("a").get("href")).content
                 filename = p.find("a").get("href").rsplit("filename=", 1)[-1]
                 filename_url_map[filename] = base_url+p.find("a").get("href")
+                filename_info_map[filename] = { "course_title": course_title, "course_number": course_number }
 
                 with open(os.getcwd()+"/"+save_directory+"/"+filename, "wb+") as f:
                     f.write(pdf)
@@ -82,6 +101,8 @@ for pdf in pdfs:
     link_obj = {
         "university": uni_name,
         "url": filename_url_map[filename],
+        "course_code": course_number,
+        "course_title": course_title,
         "text": pdf_text
     }
     text.append(link_obj)
