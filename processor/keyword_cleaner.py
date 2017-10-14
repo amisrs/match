@@ -96,6 +96,8 @@ class keyword_cleaner:
             "provide",
             "asterisk",
             "paper",
+            "topic",
+            "module"
         ]
         passed_blacklist = []
         for word in keywords:

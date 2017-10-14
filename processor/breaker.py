@@ -28,7 +28,7 @@ db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="sc
 cursor = db.cursor()
 
 # cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
-cursor.execute("""SELECT * FROM course_scrape WHERE id = 5499""")
+cursor.execute("""SELECT * FROM course_scrape WHERE keywords = "" """)
 
 outlines = cursor.fetchall()
 # for every course outline
@@ -38,17 +38,17 @@ for university, url, text, course_code, course_title, course_id, keywords, email
     outcome_keywords = []
 
     print university
-
     text = replace_p = re.sub('<p\s*?>', '', text)
     text = replace_p2 = re.sub('</p>', '. ', text)
     text = replace_div = re.sub('<div\s*?>', '', text)
     text = replace_div2 = re.sub('</div>', '. ', text)
+    text = text.replace('\r', '.')
     text = text.replace('\n', ' ')
 
     cleaned_text = BeautifulSoup(text, "lxml").text
-    print cleaned_text
     token_list = tokenizer.tokenize(cleaned_text)
 
+    batch_count = 0
     print "\n========================= Tokens: "+str(len(token_list))+ " ========================="
     for token in token_list:
         # print token
@@ -125,8 +125,11 @@ for university, url, text, course_code, course_title, course_id, keywords, email
         print insert_query
         insert_cursor.execute(insert_query)
         insert_cursor.close()
+        if batch_count >= 50:
+            db.commit()
+            batch_count = 0
 
-
+    db.commit()
     keyword_string = ""
     outcome_keywords = kc.clean_keywords(outcome_keywords)
     for keyword in outcome_keywords:
@@ -139,8 +142,9 @@ for university, url, text, course_code, course_title, course_id, keywords, email
     outline_cursor.execute(keyword_query)
     outline_cursor.close()
 
+    db.commit()
+
 cursor.close()
-db.commit()
 
     # break
         # pass to classifier
