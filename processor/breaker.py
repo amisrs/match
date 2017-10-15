@@ -28,7 +28,7 @@ db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="sc
 cursor = db.cursor()
 
 # cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
-cursor.execute("""SELECT * FROM course_scrape WHERE keywords = "" """)
+cursor.execute("""SELECT * FROM course_scrape WHERE university != "Swansea University" and id IN (5498, 5499, 5500)  """)
 
 outlines = cursor.fetchall()
 # for every course outline
