@@ -350,6 +350,9 @@ class keyword_cleaner:
             "skills",
             "made based",
             "one day",
+            "paper",
+            "topic",
+            "module"
         ]
         passed_blacklist = []
         for word in keywords:
