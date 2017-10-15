@@ -134,7 +134,6 @@ class keyword_cleaner:
             "choose",
             "calculator",
             "primarily",
-            "format",
             "period",
             "maximum",
             "level",
@@ -145,7 +144,7 @@ class keyword_cleaner:
             "key",
             "plagiarism",
             "conduct",
-            "exercises",
+            "exercise",
             "assignment",
             "interfere",
             "safely",
@@ -352,27 +351,97 @@ class keyword_cleaner:
             "one day",
             "paper",
             "topic",
-            "module"
+            "module",
+            "determine",
+            "contribute",
+            "appropriate",
+            "facilities",
+            "facility",
+            "change",
+            "experience",
+            "aspect",
+            "charge",
+            "compulsory",
+            "answer",
+            "become",
+            "easily",
+            "explore",
+            "component",
+            "marking",
+            "lowest",
+            "assign",
+            "evidence",
+            "contribut",
+            "grounds",
+            "programs",
+            "significantly",
+            "correct",
+            "expectation",
+            "properly",
+            "signatur",
+            "previously",
+            "register",
+            "group",
+            "formal",
+            "late arr",
+            "approv",
+            "behalf",
+            "offenders",
+            "collabo",
+            "individua",
+            "discover",
+            "respec",
+            "plastic",
+            "cover sheet",
+            "clarif",
+            "declar",
+            "work done",
+            "full name",
+            "language",
+            "whichever",
+            "circumstance",
+            "knowledge",
+            "convenient",
+            "short hand",
+            "affect",
+            "include",
+            "introduce",
+            "book",
+            "extend",
+            "much work",
+            "extra work",
+            "approach",
+            "compete",
+            "succinct",
+            "recognition",
+            "together",
+            "importance",
+            "function",
+            "problem"
         ]
+
+        searched_words = []
         passed_blacklist = []
         for word in keywords:
+            if word in searched_words:
+                continue
             word = word.replace("'", "")
             word = word.replace("\"", "")
             reg = re.compile('\w ')
             if reg.search(word) != None:
                 # we don't want to mess with phrases
-                if word not in self.cleaned_list:
+                if word not in passed_blacklist:
                     is_black = False
+                    print "Checking blacklist... ================="
                     for blackword in blacklist:
                         if blackword in word:
                             print blackword + " is in " + word
                             is_black = True
                             break
+                    print "Blacklist done... ================="
                     if not is_black and word not in passed_blacklist and len(word) > 5:
-                        print word + " passed the blacklist"
-
-
                         passed_blacklist.append(word)
+
                 continue
 
             # now it's only single words
@@ -386,16 +455,18 @@ class keyword_cleaner:
             except UnicodeDecodeError as e:
                 continue
             if word_pos[0][1] in self.good_pos:
-                if word not in self.cleaned_list:
+                if word not in passed_blacklist:
                     is_black = False
+                    print "Checking blacklist... ================="
                     for blackword in blacklist:
                         if blackword in word:
+                            print blackword + " is in " + word
                             is_black = True
                             break
-
+                    print "Blacklist done... ================="
                     if not is_black and word not in passed_blacklist and len(word) > 5:
                         passed_blacklist.append(word)
-
+            searched_words.append(word)
         # st = StanfordPOSTagger(_path_to_model, _path_to_jar)
         # pos_list = st.tag_sents([passed_blacklist])
         #

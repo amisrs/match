@@ -18,6 +18,15 @@ def break_phrases(list_to_break):
 
 def compare_keywords(list1, list2, sim_type="path"):
 
+    if type(list1) == type("str"):
+        list1 = list1.replace("\"", "")
+        list1 = list1.split(", ")
+
+    if type(list2) == type("str"):
+        list2 = list2.replace("\"", "")
+        list2 = list2.split(", ")
+
+
     # maximum similarity for each word in list1 with words in list2
     similarity_dict = {}
     similarity_list = []
@@ -51,24 +60,28 @@ def compare_keywords(list1, list2, sim_type="path"):
 
             for list2_word in break_phrases(list2):
                 # print list2_word.encode('utf-8', 'ignore')
-                synsetlist2 = wordnet.synsets(list2_word.encode('utf-8', 'ignore'))
-                #calc similarity
-                if len(synsetlist2) == 0:
+                try:
+                    synsetlist2 = wordnet.synsets(list2_word.encode('utf-8', 'ignore'))
+                    #calc similarity
+                    if len(synsetlist2) == 0:
+                        continue
+
+                    syn_sum = 0
+                    avg_similarity = 0
+
+                    print "For " + list1_word + " vs " + list2_word
+                    # print "Comparing synset1: " + str(synsetlist1)
+                    # print "to synset2: " + str(synsetlist2)
+                    best = max((wordnet.wup_similarity(s1, s2) or 0, s1, s2) for s1, s2 in
+                            product(synsetlist1, synsetlist2))
+                    print best
+                    print "\n"
+
+                    if best[0] > max_similarity:
+                        max_similarity = best[0]
+                except Exception as e:
+                    print "Exception: " + str(e)
                     continue
-
-                syn_sum = 0
-                avg_similarity = 0
-
-                print "For " + list1_word + " vs " + list2_word
-                print "Comparing synset1: " + str(synsetlist1)
-                print "to synset2: " + str(synsetlist2)
-                best = max((wordnet.wup_similarity(s1, s2) or 0, s1, s2) for s1, s2 in
-                        product(synsetlist1, synsetlist2))
-                print best
-                print "\n"
-
-                if best[0] > max_similarity:
-                    max_similarity = best[0]
                 # for synset1 in synsetlist1:
                 #     synset1sum = 0
                 #     for synset2 in synsetlist2:
