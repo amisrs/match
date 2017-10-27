@@ -1,6 +1,8 @@
 # Course Match Backend
 
-All backend processes are covered by this repo:
+All backend processes are covered by this repo. This readme will clarify the purpose of each of the scripts.
+If you want to run this yourself you just need to install Python and all the dependencies (and also have
+your own database server to write to, instead of mine).
 
 
 ## Scraping
@@ -58,6 +60,9 @@ reads the database and displays the information.
 mysql.txt - credentials to access the database (I'm not putting it on github)
 
 ### Python
+Ideally run this on Python 2.7.
+
+
 beautifulsoup4==4.5.3
 
 gensim==2.3.0
