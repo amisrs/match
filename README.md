@@ -49,22 +49,34 @@ reads the database and displays the information.
 
 ## Requirements
 [glove.6B.zip](https://nlp.stanford.edu/projects/glove/) - Pretrained model based on Wikipedia used for vectorizing.
+
 [enwiki_dbow/](https://github.com/jhlau/doc2vec) - Another pretrained model based on Wikipedia used for vectorizing.
 
 mysql.txt - credentials to access the database (I'm not putting it on github)
 
 ### Python
 beautifulsoup4==4.5.3
+
 gensim==2.3.0
+
 nltk==3.2.4
+
 numpy==1.13.1
+
 pandas==0.20.3
+
 PyPDF2==1.26.0
+
 rake-nltk==1.0.1
+
 scikit-learn==0.19.0
+
 scipy==0.19.1
+
 selenium==3.5.0
+
 textract==1.6.1
+
 
 
 
