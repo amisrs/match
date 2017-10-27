@@ -36,6 +36,7 @@ class TfidfEmbeddingVectorizer(object):
         return self
 
     def transform(self, x):
+        print x
         return np.array([
             np.mean([self.word2vec[w] * self.word2weight[w]
                 for w in words if w in self.word2vec] or

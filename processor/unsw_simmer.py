@@ -30,6 +30,11 @@ sim_cursor.execute(sim_query)
 sims = sim_cursor.fetchall()
 sim_cursor.close()
 
+leftrights = []
+for course1, course2, sim in sims:
+    leftright = str(course1)+str(course2)
+    leftrights.append(leftright)
+
 lefts = {}
 for unsw_keywords, unsw_id in unsw_keywords:
     # print unsw_id
@@ -49,13 +54,14 @@ for left in lefts:
         print
         print "Sim: " + str(left) + " vs " + str(right)
         print rights[right]
-        sim = compare.compare_keywords(lefts[left], rights[right])
+        if str(left)+str(right) not in leftrights:
+            sim = compare.compare_keywords(lefts[left], rights[right])
 
-        insert_query = "INSERT INTO similarity (course1, course2, similarity) VALUES ({0}, {1}, {2}) ON DUPLICATE KEY UPDATE similarity = {2};".format(left,right,compare.simdict_avg(sim))
-        insert_cursor = db.cursor()
-        insert_cursor.execute(insert_query);
-        insert_cursor.close()
-        db.commit()
+            insert_query = "INSERT INTO similarity (course1, course2, similarity) VALUES ({0}, {1}, {2}) ON DUPLICATE KEY UPDATE similarity = {2};".format(left,right,compare.simdict_avg(sim))
+            insert_cursor = db.cursor()
+            insert_cursor.execute(insert_query);
+            insert_cursor.close()
+            db.commit()
 
         #compare unsw_course vs target_course
         # similarity = get_similarity(unsw_course, target_course["id"])

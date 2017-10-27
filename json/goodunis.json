@@ -1,0 +1,60 @@
+1. NUS
+https://inetapps.nus.edu.sg/bulletin/msearch_view_full.aspx?modeCode=[CODE]
+
+Get the codes from:
+http://www.comp.nus.edu.sg/programmes/ug/is/curr/
+
+http://bba.nus.edu/acad-prog/2016-02-05-03-41-56/non-business-students/non-biz-cohort-2017-after
+http://bba.nus.edu/academic-programmes/bba-programme/curriculum-2017
+
+
+2. UBC
+https://mybcom.sauder.ubc.ca/courses-money-enrolment/courses/comm-438
+
+Get the codes from
+https://mybcom.sauder.ubc.ca/courses-money-and-enrolment/courses
+scrape dat whole thing
+
+3.
+
+Get the codes from:
+CS
+http://www.mcgill.ca/study/2017-2018/courses/search?f%5B0%5D=level%3Aundergraduate&f%5B1%5D=field_dept_code%3A0155
+
+Management
+http://www.mcgill.ca/study/2017-2018/courses/search?f%5B0%5D=level%3Aundergraduate&f%5B1%5D=field_dept_code%3A0028
+
+EE & CE
+http://www.mcgill.ca/study/2017-2018/courses/search?f%5B0%5D=level%3Aundergraduate&f%5B1%5D=field_dept_code%3A0156
+
+4. City University of Hong Kong
+http://www.cityu.edu.hk/ug/current/course/[CODE].htm
+
+Get codes from:
+http://www.cityu.edu.hk/ug/current/catalogue/catalogue_UC.htm?page=B/B_course_AC.htm
+http://www.cityu.edu.hk/ug/current/catalogue/catalogue_UC.htm?page=B/B_course_EF.htm
+http://www.cityu.edu.hk/ug/current/catalogue/catalogue_UC.htm?page=B/B_course_IS.htm
+http://www.cityu.edu.hk/ug/current/catalogue/catalogue_UC.htm?page=B/B_course_MGT.htm
+http://www.cityu.edu.hk/ug/current/catalogue/catalogue_UC.htm?page=B/B_course_MS.htm
+http://www.cityu.edu.hk/ug/current/catalogue/catalogue_UC.htm?page=B/B_course_MS.htm
+
+http://www.cityu.edu.hk/ug/current/catalogue/catalogue_UC.htm?page=B/B_course_CS.htm
+
+
+5. Sheffield
+
+Scrape the links from
+http://www-online.shef.ac.uk:3001/pls/live/web_cal.cal3_unit_form?dept_code=INF&dept_name=Information+School&disp_year=17
+http://www-online.shef.ac.uk:3001/pls/live/web_cal.cal3_unit_form?dept_code=COM&dept_name=Computer+Science&disp_year=17
+http://www-online.shef.ac.uk:3001/pls/live/web_cal.cal3_unit_form?dept_code=ECN&dept_name=Economics&disp_year=17
+http://www-online.shef.ac.uk:3001/pls/live/web_cal.cal3_unit_form?dept_code=MGT&dept_name=Management+School&disp_year=17
+
+
+6. Georgia Tech
+https://www.scheller.gatech.edu/degree-programs/undergraduate/files/BSBACourses.pdf
+
+7. Newcastle University
+https://www.ncl.ac.uk/module-catalogue/modules.php
+
+8. Swansea University
+https://intranet.swan.ac.uk/catalogue/default.asp?type=modbydept&dept=any&ayr=17/18&detailOnly=false

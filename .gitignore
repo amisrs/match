@@ -2,3 +2,4 @@ mysqlp.txt
 glove*
 *.pdf
 nohup.out
+doc2vec.bin*
