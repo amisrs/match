@@ -4,6 +4,7 @@ All backend processes are covered by this repo:
 
 
 ## Scraping
+How-to: Run the scrapers for each uni, and then write the json output into your database.
 1. Scraping a list of partner universities for UNSW.
 	- partner-scrape.py
 
@@ -17,6 +18,7 @@ All backend processes are covered by this repo:
 
 
 ## Training
+How-to: Automatically done when classifier.py is used.
 1. We manually labelled a bunch of sentences for use as training data, and
 stored it in a directory structure.
 	- csv_to_dir.py
@@ -26,6 +28,7 @@ stored it in a directory structure.
 
 
 ## Processing
+How-to: Run breaker.py
 The entry point is breaker.py. I should have split it into more files, because
 breaker.py does more than just breaking now (but with time constraints I lived with it)
 
