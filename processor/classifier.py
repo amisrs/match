@@ -1,3 +1,5 @@
+# http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
+
 from sklearn import svm
 from sklearn.pipeline import Pipeline
 from sklearn.datasets import load_files
