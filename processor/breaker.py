@@ -1,3 +1,8 @@
+# Entry point for the classification process.
+# This program reads course outlines from the database and breaks them into sentences.
+# Then it passes the sentences into the classifier, and writes the result to the database.
+# Then it extracts keywords and writes those to the database.
+
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
 
@@ -27,9 +32,9 @@ classifier = classifier()
 db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="scrape")
 cursor = db.cursor()
 
-# cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
-cursor.execute("""SELECT * FROM course_scrape WHERE university != "Swansea University" and id IN (5498, 5499, 5500)  """)
 
+# cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
+cursor.execute("""SELECT * FROM course_scrape WHERE university != "Swansea University" """)
 outlines = cursor.fetchall()
 # for every course outline
 for university, url, text, course_code, course_title, course_id, keywords, emails in outlines:
@@ -37,7 +42,7 @@ for university, url, text, course_code, course_title, course_id, keywords, email
 
     outcome_keywords = []
 
-    print university
+    # I want to destroy non-space whitespace. Otherwise it's hard to determine words.
     text = replace_p = re.sub('<p\s*?>', '', text)
     text = replace_p2 = re.sub('</p>', '. ', text)
     text = replace_div = re.sub('<div\s*?>', '', text)
@@ -48,13 +53,22 @@ for university, url, text, course_code, course_title, course_id, keywords, email
     cleaned_text = BeautifulSoup(text, "lxml").text
     token_list = tokenizer.tokenize(cleaned_text)
 
+    # Now the course outline is broken into sentences.
+    # I want to run in batches so it doesn't restart from the beginning if it crashes
     batch_count = 0
     print "\n========================= Tokens: "+str(len(token_list))+ " ========================="
     for token in token_list:
-        # print token
+
+
         token = token.replace("\"", "")
+
+        # Call to classifier.py
         classifier_result = classifier.classify_sentence(token)
+
+        # The probability is not important, doesn't really tell us much
         probs = classifier_result[0]
+
+        # This is the actual result of classification
         classified = classifier_result[1]
 
         prob_dict = {}
@@ -63,11 +77,13 @@ for university, url, text, course_code, course_title, course_id, keywords, email
 
         guessed_category = max(prob_dict, key=prob_dict.get)
 
+        # We want keywords only from course outcomes or course content, that were relatively accurately classified.
         if (guessed_category == 'course_outcomes' and abs(prob_dict['course_outcomes']) <= 0.5) or (guessed_category == 'course_content' and abs(prob_dict['course_content']) <= 0.5):
             r.extract_keywords_from_text(token)
             ranked_phrases = r.get_ranked_phrases()
             for phrase in ranked_phrases:
                 if len(phrase) < 4:
+                    # Don't want short words
                     ranked_phrases.remove(phrase)
             outcome_keywords.extend(list(set(ranked_phrases)))
 
@@ -75,6 +91,8 @@ for university, url, text, course_code, course_title, course_id, keywords, email
 
         insert_cursor = db.cursor()
 
+        # If a sentence has already been classified, just update the values.
+        # Otherwise insert new
         get_existing = ("""
             SELECT id FROM sentence WHERE text = \"{0}\" and course = {1}
             """.format(token.replace("\"", "").encode('utf-8', 'ignore'), course_id))
@@ -145,6 +163,3 @@ for university, url, text, course_code, course_title, course_id, keywords, email
     db.commit()
 
 cursor.close()
-
-    # break
-        # pass to classifier
