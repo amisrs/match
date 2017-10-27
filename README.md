@@ -48,7 +48,7 @@ breaker.py does more than just breaking now (but with time constraints I lived w
 4. Extracting email addresses from outlines.
 	- regex_emails.py
 
-The results of all of these scripts are written to the database. From there, the front-end
+The results of all of these scripts are written to the database. From there, the [front-end](https://github.com/imjeremyhi/ExchangeCourseMatcher)
 reads the database and displays the information.
 
 
