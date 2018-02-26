@@ -36,6 +36,7 @@ breaker.py does more than just breaking now (but with time constraints I lived w
 
 1. Breaking the course outlines into sentences.
 	- breaker.py
+  	At this point the sentences are in the database ready to be classified.
 
 2. Classifying the sentences into the categories.
 	- classifier.py
@@ -45,12 +46,16 @@ breaker.py does more than just breaking now (but with time constraints I lived w
 	- keyword_cleaner.py
 	- unsw_keyword_updater.py
 
-4. Extracting email addresses from outlines.
+4. Calculating similarity score
+	- cosine2.py *
+
+5. Extracting email addresses from outlines.
 	- regex_emails.py
 
 The results of all of these scripts are written to the database. From there, the [front-end](https://github.com/imjeremyhi/ExchangeCourseMatcher)
 reads the database and displays the information.
 
+* You will need to download the enwiki_dbow model before running this script, and extract it to processor/
 
 ## Requirements
 [glove.6B.zip](https://nlp.stanford.edu/projects/glove/) - Pretrained model based on Wikipedia used for vectorizing.
