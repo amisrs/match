@@ -23,6 +23,8 @@ with open('mysqlp.txt', 'r') as mysqlp_file:
     mysqlp = mysqlp_file.read().split('\n')[0]
 
 punkt_param = PunktParameters()
+
+# this is so the sentence tokenizer doesn't think that the full stops in abbreviations are end of sentence.
 abbreviation = ['Max', 'Min', 'max', 'min', 'e.g', 'i.e', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
 punkt_param.abbrev_types = set(abbreviation)
 
@@ -32,8 +34,7 @@ classifier = classifier()
 db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="scrape")
 cursor = db.cursor()
 
-
-# cursor.execute("""SELECT * FROM course_scrape WHERE university != 'cityofhongkong' and university != 'mcgill' and university != 'newcastle' and university != 'sheffield' and university != 'ubc' and university != 'swansea' and university != 'University of Sussex' and university != 'Lancaster University' and university != 'University of Leeds' LIMIT 2""")
+# we skip swansea because it has WAY too many courses and just eats time
 cursor.execute("""SELECT * FROM course_scrape WHERE university != "Swansea University" """)
 outlines = cursor.fetchall()
 # for every course outline
