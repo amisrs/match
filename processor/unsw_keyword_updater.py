@@ -1,3 +1,6 @@
+# This script just reruns the keyword cleaner on current entries in the database
+# I didn't want to have to rerun the whole process again when I was tweaking the keywords
+
 import MySQLdb
 from keyword_cleaner import keyword_cleaner
 

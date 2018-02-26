@@ -6,14 +6,15 @@ your own database server to write to, instead of mine).
 
 
 ## Scraping
-How-to: Run the scrapers for each uni, and then write the json output into your database.
+How-to: Run the scrapers in /scrapers for each uni, and then write the json output into your database.
 1. Scraping a list of partner universities for UNSW.
 	- partner-scrape.py
 
 2. Scraping the course outlines from partner universities.
 	- [university].py
+	These scripts will output JSON data into the /json folder
 
-3. Writing scraped course outlines (with metadata) to the database.
+3. Writing scraped course outlines (with metadata) to the database (these scripts are in /utils).
 	- unis-to-mysql.py
 	- json-to-mysql.py
 	- json-to-mysql-duplicates.py
@@ -44,10 +45,11 @@ breaker.py does more than just breaking now (but with time constraints I lived w
 3. Extracting keywords from classified sentences.
 	- breaker.py
 	- keyword_cleaner.py
-	- unsw_keyword_updater.py
+	Each course now has keywords associated with it.
 
 4. Calculating similarity score
 	- cosine2.py *
+	Each pair of courses now has a similarity score
 
 5. Extracting email addresses from outlines.
 	- regex_emails.py

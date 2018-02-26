@@ -1,3 +1,5 @@
+# This just explodes the csv format we had the training data into directory structure
+
 import csv
 import glob
 import os

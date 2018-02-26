@@ -5,12 +5,10 @@
 # After many attempts, I finally thought of this solution that doesn't take thousands
 # of hours to run.
 #
-# https://stackoverflow.com/questions/8897593/similarity-between-two-text-documents
-#
 # It takes 1-2 hours to run with 4000 courses and 234 unsw courses, ending up with
 # over a million rows in the similarity table.
 # That's pretty fast!
-
+# https://stackoverflow.com/questions/8897593/similarity-between-two-text-documents
 
 import MySQLdb
 import numpy as np
@@ -54,7 +52,10 @@ for unsw_keyword, unsw_id in unsw_keywords:
     for other_keyword, other_id in other_keywords:
 
         tfidf = vectorizer.fit_transform([unsw_keyword, other_keyword])
+
+	# cosine distance
         similarity = ((tfidf * tfidf.T).A)[0,1]
+
         rows.append((unsw_id, other_id, similarity))
 
     noerror = False

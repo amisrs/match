@@ -1,3 +1,6 @@
+# This class will get imported in other scripts when there is a need to clean a keyword list
+# Usually to get rid of blacklisted keywords
+
 import nltk
 import re
 import os
@@ -23,7 +26,7 @@ class keyword_cleaner:
 
     def clean_keywords(self, keywords):
         print 'Cleaning keyword list: '
-        
+
         blacklist_file = open('blacklist.txt', 'r')
         blacklist = blacklist_file.read().split('\n')
         searched_words = []
@@ -93,52 +96,56 @@ class keyword_cleaner:
         print self.broken_list
         return self.broken_list
 
-    def compare_keywords(self, list1, list2, sim_type="path"):
-        similarity_list = []
+    # This method of comparing keywords was just ridculously slow.
+    # It's like O(n^4) or something?
+    # Disgusting.
 
-        for list1_word in list1:
-            max_similarity = 0
-            synsetlist1 = wordnet.synsets(list1_word)
-            if len(synsetlist1) == 0:
-                continue
-
-            for list2_word in list2:
-                synsetlist2 = wordnet.synsets(list2_word)
-                #calc similarity
-                if len(synsetlist2) == 0:
-                    continue
-
-                syn_sum = 0
-                avg_similarity = 0
-
-                for synset1 in synsetlist1:
-                    synset1sum = 0
-                    for synset2 in synsetlist2:
-                        # print "similarity of: " + str(synset1) + " vs " + str(synset2)
-                        if sim_type == "path":
-                            sim = synset1.path_similarity(synset2)
-                        elif sim_type == "lch":
-                            sim = synset1.lch_similarity(synset2)
-                        elif sim_type == "wup":
-                            sim = synset1.wup_similarity(synset2)
-                        # elif sim_type == "res":
-                        #     sim = synset1.res_similarity(synset2)
-                        # elif sim_type == "jcn":
-                        #     sim = synset1.jcn_similarity(synset2)
-                        # elif sim_type == "lin":
-                        #     sim = synset1.lin_similarity(synset2)
-                        #
-                        if sim != None:
-                            synset1sum += sim
-                    synset1avg = synset1sum / len(synsetlist2)
-                    syn_sum += synset1avg
-                avg_similarity = syn_sum / len(synsetlist1)
-
-
-                print list1_word + " similarity to " + list2_word + ": " + str(avg_similarity)
-                if avg_similarity > max_similarity:
-                    max_similarity = avg_similarity
-
-            max_sim_obj = {list1_word: max_similarity}
-            similarity_list.append(max_sim_obj)
-        return similarity_list
+    # def compare_keywords(self, list1, list2, sim_type="path"):
+    #     similarity_list = []
+    #
+    #     for list1_word in list1:
+    #         max_similarity = 0
+    #         synsetlist1 = wordnet.synsets(list1_word)
+    #         if len(synsetlist1) == 0:
+    #             continue
+    #
+    #         for list2_word in list2:
+    #             synsetlist2 = wordnet.synsets(list2_word)
+    #             #calc similarity
+    #             if len(synsetlist2) == 0:
+    #                 continue
+    #
+    #             syn_sum = 0
+    #             avg_similarity = 0
+    #
+    #             for synset1 in synsetlist1:
+    #                 synset1sum = 0
+    #                 for synset2 in synsetlist2:
+    #                     # print "similarity of: " + str(synset1) + " vs " + str(synset2)
+    #                     if sim_type == "path":
+    #                         sim = synset1.path_similarity(synset2)
+    #                     elif sim_type == "lch":
+    #                         sim = synset1.lch_similarity(synset2)
+    #                     elif sim_type == "wup":
+    #                         sim = synset1.wup_similarity(synset2)
+    #                     # elif sim_type == "res":
+    #                     #     sim = synset1.res_similarity(synset2)
+    #                     # elif sim_type == "jcn":
+    #                     #     sim = synset1.jcn_similarity(synset2)
+    #                     # elif sim_type == "lin":
+    #                     #     sim = synset1.lin_similarity(synset2)
+    #                     #
+    #                     if sim != None:
+    #                         synset1sum += sim
+    #                 synset1avg = synset1sum / len(synsetlist2)
+    #                 syn_sum += synset1avg
+    #             avg_similarity = syn_sum / len(synsetlist1)
+    #
+    #
+    #             print list1_word + " similarity to " + list2_word + ": " + str(avg_similarity)
+    #             if avg_similarity > max_similarity:
+    #                 max_similarity = avg_similarity
+    #
+    #         max_sim_obj = {list1_word: max_similarity}
+    #         similarity_list.append(max_sim_obj)
+    #     return similarity_list
