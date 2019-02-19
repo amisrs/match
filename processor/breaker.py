@@ -31,7 +31,8 @@ punkt_param.abbrev_types = set(abbreviation)
 tokenizer = PunktSentenceTokenizer(punkt_param)
 
 classifier = classifier()
-db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="scrape")
+db = MySQLdb.connect(host="", user="", passwd=, db="") # don't laugh at me i left credentials in the commit
+
 cursor = db.cursor()
 
 # we skip swansea because it has WAY too many courses and just eats time
