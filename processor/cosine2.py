@@ -21,7 +21,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 with open('mysqlp.txt', 'r') as mysqlp_file:
     mysqlp = mysqlp_file.read().split('\n')[0]
 
-db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="scrape")
+db = MySQLdb.connect(host="", user="", passwd=, db="") # don't laugh at me i left credentials in the commit
 
 unsw_cursor = db.cursor()
 unsw_query = "SELECT keywords, id FROM course_scrape WHERE university = 'University of New South Wales'"
@@ -67,7 +67,8 @@ for unsw_keyword, unsw_id in unsw_keywords:
             noerror = True
         except Exception as e:
             print str(e)
-            db = MySQLdb.connect(host="104.236.9.215", user="scraper", passwd=mysqlp, db="scrape")
+            db = MySQLdb.connect(host="", user="", passwd=, db="") # don't laugh at me i left credentials in the commit
+
             noerror = False
 
     db.commit()
