@@ -62,8 +62,6 @@ reads the database and displays the information.
 ## Requirements
 [glove.6B.zip](https://nlp.stanford.edu/projects/glove/) - Pretrained model based on Wikipedia used for vectorizing.
 
-[enwiki_dbow/](https://github.com/jhlau/doc2vec) - Another pretrained model based on Wikipedia used for vectorizing.
-
 mysql.txt - credentials to access the database (I'm not putting it on github)
 
 ### Python
